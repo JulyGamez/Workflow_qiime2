@@ -1,4 +1,6 @@
-# Workflow_qiime2
+# Workflow_qiime2-2022.8  
+Es necesario instalar la versión qiime2-2022.8 (conda environment - seguir documentación de QIIME2).  
+NOTA: Siempre tener cuidado de la ubicación de los archivos.  
 
 ## 1. Importing sequences  
 - Revisar los archivos que se generaron de la secuenciación. En este caso se debió hacer un manifest en el que se coloca el sample ID, forward o reverse y la ubicación. Una vez realizado, se procede al siguiente comando:  
@@ -28,9 +30,28 @@
 `qiime metadata tabulate --m-input-file first_analysis/02_dada12_16_285/denoising_stats.qza --o-visualization first_analysis/02_dada12_16_285/demux-filter-stats12_16_285.qzv`  
 
 - Todo se registró en un Excel "TRIMM_ANALISIS" (Link de acceso al drive donde está ubicado el Excel)  [Onedrive_datos](https://tecmx-my.sharepoint.com/personal/a00826712_tec_mx//_layouts/15/onedrive.aspx?login_hint=A00826712%40tec%2Emx&id=%2Fpersonal%2Fa00826712%5Ftec%5Fmx%2FDocuments%2F16S%5FDIANA)  
+- A partir de los datos recabados se seleccinó el TRIMM9. Con estos parámetros 12, 16, 285, 250 se obtuvo una cantidad elevada de features y se conservaron gran parte de los reads  
+
+### 2.2 Filtrado por frecuencia y features  
+#### 2.2.1 Definir frecuencia mínima por feature  
+- Una vez seleccionado el procesamiento, se debe realizar el filtrado de los features que pueden ser considerados como contaminación, por lo que debemos establecer el valor mínimo de frecuencia de cada feature. Para esto se usará "thumb rule" (fórmula que permite definir valor mínimo esperado con base en el número de muestras)  
+
+- Una vez establecido el valor se corre el siguiente comando para eliminar aquellos features con una frecuencia menor a ___:  
+
+`qiime feature-table filter-features --i-table 02_dada12_16_285/table.qza --p-min-frequency 10 --o-filtered-table freq-filt-table.qza`    
+
+#### 2.2.2 Eliminar features
+- Para eliminar los features que corresponden a mitocondrias, cloroplastos, Archaea y Cyanobacteria, se be primeramente generar un clasificador para asignación taxonómica. Se seleccionó la base de datos de SILVA_138.1 por ser la más acualizada.  
+
+- Para esto desde el computador se debe descargar el archivo con las secuencias fasta: "SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz" de [SILVA_138_fasta](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/); y el archivo con los IDs de la taxonomía: "tax_slv_ssu_138.1.txt.gz" de [taxonomy_silva](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/taxonomy/).  
+
+- Una vez descargados, se procede a convertirlos a artifacto de qiime2:  
+
+`qiime tools import --type 'FeatureData[Sequence]' --input-path 85_otus.fasta --output-path 85_otus.qza`  
+`qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeaderlessTSVTaxonomyFormat --input-path 85_otu_taxonomy.txt --output-path ref-taxonomy.qza`
 
 
-- Descargar archivo "SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz" de [SILVA_138_fasta](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/) y "tax_slv_ssu_138.1.txt.gz" de [taxonomy_silva](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/taxonomy/)
 
+- Ahora se procede a eliminar Chloroplast, Mitochondria, Cyanobacteria, Archaea (especies que no deben de estar ahí):  
 
-
+### 2.3 Batch effect
