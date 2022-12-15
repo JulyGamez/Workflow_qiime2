@@ -43,11 +43,15 @@ NOTA: Siempre tener cuidado de la ubicación de los archivos.
 #### 2.2.2 Eliminar features
 - Para eliminar los features que corresponden a mitocondrias, cloroplastos, Archaea y Cyanobacteria, se be primeramente generar un clasificador para asignación taxonómica. Se seleccionó la base de datos de SILVA_138.1 por ser la más acualizada.  
 
+#### 2.2.2.1 Entrenar clasificador  
+
 - Para esto desde el computador se debe descargar el archivo con las secuencias fasta: "SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz" de [SILVA_138_fasta](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/); y el archivo con los IDs de la taxonomía: "tax_slv_ssu_138.1.txt.gz" de [taxonomy_silva](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/taxonomy/).  
 
 - Una vez descargados, se procede a convertirlos a artifacto de qiime2:  
 
 `qiime tools import --type 'FeatureData[Sequence]' --input-path SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz --output-path SILVA_138.1_99_seqs.qza`  
+
+NOTA: Marcó error por la presencia de U en la secuencia (solo admite formato para DNA). Se debe realizar el cambio correspondiente.  
 
 `qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeaderlessTSVTaxonomyFormat --input-path tax_slv_ssu_138.1.txt --output-path ref-taxonomy.qza`  
 
