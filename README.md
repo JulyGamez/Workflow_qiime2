@@ -47,10 +47,13 @@ NOTA: Siempre tener cuidado de la ubicación de los archivos.
 
 - Una vez descargados, se procede a convertirlos a artifacto de qiime2:  
 
-`qiime tools import --type 'FeatureData[Sequence]' --input-path 85_otus.fasta --output-path 85_otus.qza`  
-`qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeaderlessTSVTaxonomyFormat --input-path 85_otu_taxonomy.txt --output-path ref-taxonomy.qza`
+`qiime tools import --type 'FeatureData[Sequence]' --input-path SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz --output-path SILVA_138.1_99_seqs.qza`  
 
+`qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeaderlessTSVTaxonomyFormat --input-path tax_slv_ssu_138.1.txt --output-path ref-taxonomy.qza`  
 
+- Ahora se debe extraer de la base de datos la sección que se obtuvo de la secuenciación. NOTA: Necesario buscar los primers y el largo amplificado (documento resumen de secuenciación), la longitud mínima y máxima de las lecturas de calidad (se observa en rep-seqs12_16_285.qzv).  
+
+`qiime feature-classifier extract-reads --i-sequences SILVA_138.1_99_seqs.qza --p-f-primer CCTAYGGGGYGCWGCAG --p-r-primer GACTACHVGGGTATCTAATCC --p-trunc-len 301 --p-min-length 273 --p-max-length 481 --o-reads ref-seqs.qza`  
 
 - Ahora se procede a eliminar Chloroplast, Mitochondria, Cyanobacteria, Archaea (especies que no deben de estar ahí):  
 
