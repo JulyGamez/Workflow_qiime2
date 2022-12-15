@@ -28,6 +28,8 @@
 `qiime metadata tabulate --m-input-file first_analysis/02_dada12_16_285/denoising_stats.qza --o-visualization first_analysis/02_dada12_16_285/demux-filter-stats12_16_285.qzv`  
 
 - Todo se registró en un Excel "TRIMM_ANALISIS" (Link de acceso al drive donde está ubicado el Excel)  [Onedrive_datos](https://tecmx-my.sharepoint.com/personal/a00826712_tec_mx//_layouts/15/onedrive.aspx?login_hint=A00826712%40tec%2Emx&id=%2Fpersonal%2Fa00826712%5Ftec%5Fmx%2FDocuments%2F16S%5FDIANA)  
+
+
 - Descargar archivo "SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz" de [SILVA_138_fasta](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/) y "tax_slv_ssu_138.1.txt.gz" de [taxonomy_silva](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/taxonomy/)
 
 
