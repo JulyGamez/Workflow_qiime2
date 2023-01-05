@@ -45,6 +45,18 @@ NOTA: Siempre tener cuidado de la ubicación de los archivos.
 
 #### 2.2.2.1 Entrenar clasificador  
 
+- Es necesario instalar [RESCRIPT] (https://github.com/bokulich-lab/RESCRIPt) en el ambiente de conda de qiime2-2022.8  
+
+`conda install -c conda-forge -c bioconda -c qiime2 -c defaults xmltodict`  
+`pip install git+https://github.com/bokulich-lab/RESCRIPt.git`  
+
+- Ingresar a [SILVA_138 database for QIIME2] (https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494) y seguir los pasos para poder descargar una base de datos de SILVA compatible con QIIME2.  
+
+`qiime rescript get-silva-data --p-version '138.1' --p-target 'SSURef_NR99' --p-include-species-labels --o-silva-sequences silva-138.1-ssu-nr99-rna-seqs.qza --o-silva-taxonomy silva-138.1-ssu-nr99-tax.qza`  
+  
+`qiime rescript reverse-transcribe --i-rna-sequences silva-138.1-ssu-nr99-rna-seqs.qza --o-dna-sequences silva-138.1-ssu-nr99-seqs.qza`  
+
+- 
 - Para esto desde el computador se debe descargar el archivo con las secuencias fasta: "SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz" de [SILVA_138_fasta](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/); y el archivo con los IDs de la taxonomía: "tax_slv_ssu_138.1.txt.gz" de [taxonomy_silva](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/taxonomy/).  
 
 - Una vez descargados, se procede a convertirlos a artifacto de qiime2:  
