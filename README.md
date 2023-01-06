@@ -38,38 +38,30 @@ NOTA: Siempre tener cuidado de la ubicación de los archivos.
 
 - Una vez establecido el valor se corre el siguiente comando para eliminar aquellos features con una frecuencia menor a ___:  
 
-`qiime feature-table filter-features --i-table 02_dada12_16_285/table.qza --p-min-frequency 10 --o-filtered-table freq-filt-table.qza`    
+`qiime feature-table filter-features --i-table /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/table.qza --p-min-frequency 10 --o-filtered-table freq-filt-table.qza`  
 
 #### 2.2.2 Eliminar features
 - Para eliminar los features que corresponden a mitocondrias, cloroplastos, Archaea y Cyanobacteria, se be primeramente generar un clasificador para asignación taxonómica. Se seleccionó la base de datos de SILVA_138.1 por ser la más acualizada.  
 
 #### 2.2.2.1 Entrenar clasificador  
 
-- Es necesario instalar [RESCRIPT] (https://github.com/bokulich-lab/RESCRIPt) en el ambiente de conda de qiime2-2022.8  
+- Es necesario instalar [RESCRIPT](https://github.com/bokulich-lab/RESCRIPt) en el ambiente de conda de qiime2-2022.8  
 
 `conda install -c conda-forge -c bioconda -c qiime2 -c defaults xmltodict`  
+
 `pip install git+https://github.com/bokulich-lab/RESCRIPt.git`  
 
-- Ingresar a [SILVA_138 database for QIIME2] (https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494) y seguir los pasos para poder descargar una base de datos de SILVA compatible con QIIME2.  
+- Ingresar a [SILVA_138 database for QIIME2](https://forum.qiime2.org/t/processing-filtering-and-evaluating-the-silva-database-and-other-reference-sequence-data-with-rescript/15494) y seguir los pasos para poder descargar una base de datos de SILVA compatible con QIIME2.  
 
 `qiime rescript get-silva-data --p-version '138.1' --p-target 'SSURef_NR99' --p-include-species-labels --o-silva-sequences silva-138.1-ssu-nr99-rna-seqs.qza --o-silva-taxonomy silva-138.1-ssu-nr99-tax.qza`  
   
 `qiime rescript reverse-transcribe --i-rna-sequences silva-138.1-ssu-nr99-rna-seqs.qza --o-dna-sequences silva-138.1-ssu-nr99-seqs.qza`  
 
-- 
-- Para esto desde el computador se debe descargar el archivo con las secuencias fasta: "SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz" de [SILVA_138_fasta](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/); y el archivo con los IDs de la taxonomía: "tax_slv_ssu_138.1.txt.gz" de [taxonomy_silva](https://www.arb-silva.de/no_cache/download/archive/release_138_1/Exports/taxonomy/).  
-
-- Una vez descargados, se procede a convertirlos a artifacto de qiime2:  
-
-`qiime tools import --type 'FeatureData[Sequence]' --input-path SILVA_138.1_SSURef_NR99_tax_silva.fasta.gz --output-path SILVA_138.1_99_seqs.qza`  
-
-NOTA: Marcó error por la presencia de U en la secuencia (solo admite formato para DNA). Se debe realizar el cambio correspondiente.  
-
-`qiime tools import --type 'FeatureData[Taxonomy]' --input-format HeaderlessTSVTaxonomyFormat --input-path tax_slv_ssu_138.1.txt --output-path ref-taxonomy.qza`  
-
 - Ahora se debe extraer de la base de datos la sección que se obtuvo de la secuenciación. NOTA: Necesario buscar los primers y el largo amplificado (documento resumen de secuenciación), la longitud mínima y máxima de las lecturas de calidad (se observa en rep-seqs12_16_285.qzv).  
 
-`qiime feature-classifier extract-reads --i-sequences SILVA_138.1_99_seqs.qza --p-f-primer CCTAYGGGGYGCWGCAG --p-r-primer GACTACHVGGGTATCTAATCC --p-trunc-len 301 --p-min-length 273 --p-max-length 481 --o-reads ref-seqs.qza`  
+`qiime feature-classifier extract-reads --i-sequences silva-138.1-ssu-nr99-seqs.qza --p-f-primer CCTAYGGGGYGCWGCAG --p-r-primer GACTACHVGGGTATCTAATCC --p-trunc-len 301 --p-min-length 273 --p-max-length 481 --p-n-jobs 32 --o-reads ref-seqs.qza`  
+
+`qiime feature-classifier fit-classifier-naive-bayes --i-reference-reads ref-seqs.qza --i-reference-taxonomy silva-138.1-ssu-nr99-tax.qza --o-classifier classifier.qza`  
 
 - Ahora se procede a eliminar Chloroplast, Mitochondria, Cyanobacteria, Archaea (especies que no deben de estar ahí):  
 
