@@ -61,7 +61,13 @@ NOTA: Siempre tener cuidado de la ubicación de los archivos.
 
 `qiime feature-classifier extract-reads --i-sequences silva-138.1-ssu-nr99-seqs.qza --p-f-primer CCTAYGGGGYGCWGCAG --p-r-primer GACTACHVGGGTATCTAATCC --p-trunc-len 301 --p-min-length 273 --p-max-length 481 --p-n-jobs 32 --o-reads ref-seqs.qza`  
 
+`qiime rescript evaluate-fit-classifier --i-sequences ref-seqs.qza --i-taxonomy silva-138.1-ssu-nr99-tax.qza --o-classifier silva99-classifier.qza --o-observed-taxonomy silva_predicted-taxonomy.qza --o-evaluation silva_taxonomy-fit-classifier-evaluation.qzv`
+
 `qiime feature-classifier fit-classifier-naive-bayes --i-reference-reads ref-seqs.qza --i-reference-taxonomy silva-138.1-ssu-nr99-tax.qza --o-classifier classifier.qza`  
+
+- Se debe realizar una prueba del clasificador, para esto se corrió el siguiente comando:  
+
+`qiime feature-classifier classify-sklearn --i-classifier classifier.qza --i-reads 02_dada12_16_285/representative-sequences.qza --o-classification taxonomy_silva_clas.qza`  
 
 - Ahora se procede a eliminar Chloroplast, Mitochondria, Cyanobacteria, Archaea (especies que no deben de estar ahí):  
 
