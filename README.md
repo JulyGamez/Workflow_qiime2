@@ -36,9 +36,9 @@ NOTA: Siempre tener cuidado de la ubicación de los archivos.
 #### 2.2.1 Definir frecuencia mínima por feature  
 - Una vez seleccionado el procesamiento, se debe realizar el filtrado de los features que pueden ser considerados como contaminación, por lo que debemos establecer el valor mínimo de frecuencia de cada feature. Para esto se usará "thumb rule" (fórmula que permite definir valor mínimo esperado con base en el número de muestras)  
 
-- Una vez establecido el valor se corre el siguiente comando para eliminar aquellos features con una frecuencia menor a ___:  
+- Una vez establecido el valor se corre el siguiente comando para eliminar aquellos features con una frecuencia menor a m=18 (frecuencia por feature) en k=17 (muestras):  
 
-`qiime feature-table filter-features --i-table /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/table.qza --p-min-frequency 10 --o-filtered-table freq-filt-table.qza`  
+`qiime feature-table filter-features --i-table /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/table.qza --p-min-frequency 17 --p-min-samples 18 --o-filtered-table freq-filt-table.qza`  
 
 #### 2.2.2 Eliminar features
 - Para eliminar los features que corresponden a mitocondrias, cloroplastos, Archaea y Cyanobacteria, se be primeramente generar un clasificador para asignación taxonómica. Se seleccionó la base de datos de SILVA_138.1 por ser la más acualizada.  
@@ -61,14 +61,26 @@ NOTA: Siempre tener cuidado de la ubicación de los archivos.
 
 `qiime feature-classifier extract-reads --i-sequences silva-138.1-ssu-nr99-seqs.qza --p-f-primer CCTAYGGGGYGCWGCAG --p-r-primer GACTACHVGGGTATCTAATCC --p-trunc-len 301 --p-min-length 273 --p-max-length 481 --p-n-jobs 32 --o-reads ref-seqs.qza`  
 
-`qiime rescript evaluate-fit-classifier --i-sequences ref-seqs.qza --i-taxonomy silva-138.1-ssu-nr99-tax.qza --o-classifier silva99-classifier.qza --o-observed-taxonomy silva_predicted-taxonomy.qza --o-evaluation silva_taxonomy-fit-classifier-evaluation.qzv`
+Opción 1  
+`qiime rescript evaluate-fit-classifier --i-sequences ref-seqs.qza --i-taxonomy silva-138.1-ssu-nr99-tax.qza --o-classifier silva99-classifier.qza --o-observed-taxonomy silva_predicted-taxonomy.qza --o-evaluation silva_taxonomy-fit-classifier-evaluation.qzv`  
 
+Opción 2  
 `qiime feature-classifier fit-classifier-naive-bayes --i-reference-reads ref-seqs.qza --i-reference-taxonomy silva-138.1-ssu-nr99-tax.qza --o-classifier classifier.qza`  
 
 - Se debe realizar una prueba del clasificador, para esto se corrió el siguiente comando:  
 
 `qiime feature-classifier classify-sklearn --i-classifier classifier.qza --i-reads 02_dada12_16_285/representative-sequences.qza --o-classification taxonomy_silva_clas.qza`  
 
-- Ahora se procede a eliminar Chloroplast, Mitochondria, Cyanobacteria, Archaea (especies que no deben de estar ahí):  
+- Ahora se procede a eliminar Chloroplast, Mitochondria, Cyanobacteria, Archaea (especies que no deben de estar ahí) de la tabla previamente filtrada para feature:  
+
+`qiime taxa filter-table --i-table freq-filt-table.qza --i-taxonomy taxonomy_silva_clas.qza --p-exclude Mitochondria,Chloroplast,Cyanobacteria,Archaea --o-filtered-table table_freq_tax_filtered.qza`  
+
+Se realiará un filtrado manual por ID, basándonos en lo que aparece en el control "mock" (todos los IDs que no deben estar presentes en la leche serán removidos). Para esto se deberá exportar la tabla filtrada a biom y de ahí a tsv. El filtrado se realizará en excel, por lo que es necesario exportarlo a nuestro computador  
+
+`qiime tools export --input-path table_freq_tax_filtered.qza --output-path table_biom`  
+`biom convert -i table_biom/feature-table.biom -o table_freq_tax_filtered.tsv --to-tsv`  
+
+``
+``
 
 ### 2.3 Batch effect
