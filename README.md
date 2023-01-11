@@ -84,3 +84,4 @@ Se realiará un filtrado manual por ID, basándonos en lo que aparece en el cont
 ``
 
 ### 2.3 Batch effect
+
