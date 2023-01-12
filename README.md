@@ -87,5 +87,37 @@ Se realiará un filtrado manual por ID, basándonos en lo que aparece en el cont
 
 `qiime taxa filter-table --i-table feature-table_filt4-.qza --i-taxonomy taxonomy_silva_clas.qza --p-exclude Streptomyces --o-filtered-table feature-table_filt4S.qza`  
 
-`qiime feature-table filter-samples --i-table feature-table_filt4S.qza --m-metadata-file metadata_complete3NUM.txt --o-filtered-table feature-table_filt4S_NUM.qza`
+`qiime feature-table filter-samples --i-table feature-table_filt4S.qza --m-metadata-file metadata_complete3_NUM.txt --o-filtered-table feature-table_filt4S_NUM.qza`  
+
+`qiime feature-table filter-samples --i-table feature-table_filt4S.qza --m-metadata-file metadata_complete3G.txt --o-filtered-table feature-table_filt4S_G.qza`  
+
+- Para visualizar las tablas y determinar si todo va en orden:  
+
+`qiime metadata tabulate --m-input-file feature-table_filt4S_NUM.qza --o-visualization feature-table_filt4S_NUM.qzv`  
+
+`qiime metadata tabulate --m-input-file feature-table_filt4S_G.qza --o-visualization feature-table_filt4S_G.qzv`  
+
+- Para el caso del set G se realizó un filtrado extra para el batch. Para esto se exportó en tsv la feature-table_filt4S_G y se modificó en excel. Los features eliminados se colocarán en el excel. Posteriormente se exportó feature_table_filt5_G.tsv a qiime2 como qza:  
+
+`biom convert -i feature_table_filt5_G.tsv -o feature_table_filt5_G.biom --table-type "Table" --to-hdf5`  
+
+`qiime tools import --input-path feature_table_filt5_G.biom --type FeatureTable[Frequency] --output-path feature_table_filt5_G.qza`  
+
+### 2.4 Análisis de diversidad  
+#### 2.4.1 Generación de árbol para análisis filogenéticos  
+- Se debe realizar un árbol con las secuencias representativas generadas para poder seguir con los análisis filogenéticos:  
+
+`qiime phylogeny align-to-tree-mafft-fasttree --i-sequences representative_sequences.qza --o-alignment aligned-rep-seqs.qza --o-masked-alignment masked-aligned-rep-seqs.qza --o-tree unrooted-tree.qza --o-rooted-tree rooted-tree.qza`  
+
+#### 2.4.2 Alpha y beta diversidad  
+
+- Con el árbol generado y las tablas filtradas se procede a realizar los análisis de diversidad. NOTA: Para determinar el --p-sampling-depth se requiere determinar el conteo mínimo de reads por muestra y valorar si se desea mantener muestra o lecturas para otorgar el valor para la rarefacción. En nuestro caso nuestras lecturas mínima y máxima por muestra eran de 6810 y 105793 respectivamente. Colocamos 9409 (para NUM) y 8633 (para G), así perdíamos solo una muestra de 6810 reads.  
+
+`qiime diversity core-metrics-phylogenetic --i-phylogeny rooted-tree.qza --i-table feature-table_filt4S_NUM.qza --p-sampling-depth 9409 --m-metadata-file metadata_complete3_NUM.txt --output-dir core-metrics-results_NUM`  
+
+- Para poder analizar estadísticamente los resultados de alpha diversidad se deben exportar los resultados:  
+
+`qiime metadata tabulate --m-input-file metadata_complete3_NUM.txt --m-input-file core-metrics-results_NUM/faith_pd_vector.qza --m-input-file core-metrics-results_NUM/shannon_vector.qza --m-input-file core-metrics-results_NUM/evenness_vector.qza --m-input-file core-metrics-results_NUM/observed_features_vector.qza --o-visualization core-metrics-results_NUM/combined_metadata_NUM.qzv`  
+
+
 
