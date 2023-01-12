@@ -80,8 +80,12 @@ Se realiará un filtrado manual por ID, basándonos en lo que aparece en el cont
 `qiime tools export --input-path table_freq_tax_filtered.qza --output-path table_biom`  
 `biom convert -i table_biom/feature-table.biom -o table_freq_tax_filtered.tsv --to-tsv`  
 
-``
-``
 
-### 2.3 Batch effect
+``  
+### 2.3 Batch effect  
+- Después de observar los gráficos de abundancias relativas ordenados por batch (fecha de extracción) e identificar visualmente una gran diferencia entre muestras y la presencia de Streptomyces, se decidió eliminar el feature Streptomyces y separar las muestras en dos sets: Num y G.  
+
+`qiime taxa filter-table --i-table feature-table_filt4-.qza --i-taxonomy taxonomy_silva_clas.qza --p-exclude Streptomyces --o-filtered-table feature-table_filt4S.qza`  
+
+`qiime feature-table filter-samples --i-table feature-table_filt4S.qza --m-metadata-file metadata_complete3NUM.txt --o-filtered-table feature-table_filt4S_NUM.qza`
 
