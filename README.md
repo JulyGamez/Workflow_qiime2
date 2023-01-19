@@ -69,7 +69,7 @@ Opción 2
 
 - Se debe realizar una prueba del clasificador, para esto se corrió el siguiente comando:  
 
-`qiime feature-classifier classify-sklearn --i-classifier classifier.qza --i-reads 02_dada12_16_285/representative-sequences.qza --o-classification taxonomy_silva_clas.qza`  
+`qiime feature-classifier classify-sklearn --i-classifier classifier.qza --i-reads 02_dada12_16_285/representative_sequences.qza --o-classification taxonomy_silva_clas.qza`  
 
 - Ahora se procede a eliminar Chloroplast, Mitochondria, Cyanobacteria, Archaea (especies que no deben de estar ahí) de la tabla previamente filtrada para feature:  
 
