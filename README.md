@@ -133,7 +133,10 @@ Se realiará un filtrado manual por ID, basándonos en lo que aparece en el cont
 
 `qiime diversity beta-group-significance --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza --m-metadata-file metadata3.tsv --m-metadata-column Group --p-method permanova --p-pairwise --o-visualization core-metrics-results/unweighted_unifrac_Group_perm.qzv`  
 
-
+ `qiime diversity beta-group-significance --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza --m-metadata-file metadata3.tsv --m-metadata-column Group --p-method anosim --p-pairwise --o-visualization core-metrics-results/unweighted_unifrac_Group_anosim.qzv`  
+ 
+`qiime diversity beta-group-significance --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza --m-metadata-file metadata3.tsv --m-metadata-column Group --p-method anosim --p-pairwise --o-visualization core-metrics-results/weighted_unifrac_Group_anosim.qzv`  
+  
 
 
 
