@@ -111,13 +111,21 @@ Se realiará un filtrado manual por ID, basándonos en lo que aparece en el cont
 
 #### 2.4.2 Alpha y beta diversidad  
 
-- Con el árbol generado y las tablas filtradas se procede a realizar los análisis de diversidad. NOTA: Para determinar el --p-sampling-depth se requiere determinar el conteo mínimo de reads por muestra y valorar si se desea mantener muestra o lecturas para otorgar el valor para la rarefacción. En nuestro caso nuestras lecturas mínima y máxima por muestra eran de 6810 y 105793 respectivamente. Colocamos 9409 (para NUM) y 8633 (para G), así perdíamos solo una muestra de 6810 reads.  
+- Con el árbol generado y las tablas filtradas se procede a realizar los análisis de diversidad. NOTA: Para determinar el --p-sampling-depth se requiere determinar el conteo mínimo de reads por muestra y valorar si se desea mantener muestra o lecturas para otorgar el valor para la rarefacción. En nuestro caso nuestras lecturas mínima y máxima por muestra eran de 5821 y 105787 respectivamente. Colocamos 7712 así perdíamos solo dos muestras del grupo control (1A28 y 1A35).  
 
-`qiime diversity core-metrics-phylogenetic --i-phylogeny rooted-tree.qza --i-table feature-table_filt4S_NUM.qza --p-sampling-depth 9409 --m-metadata-file metadata_complete3_NUM.txt --output-dir core-metrics-results_NUM`  
+`qiime diversity core-metrics-phylogenetic --i-phylogeny rooted-tree.qza --i-table feature-table5.qza --p-sampling-depth 7712 --m-metadata-file metadata3.tsv --output-dir core-metrics-results`  
+
+`qiime diversity alpha-group-significance --i-alpha-diversity faith_pd_vector.qza --m-metadata-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/metadata3.tsv --o-visualization faith-pd-significance.qzv`  
+
+`qiime diversity alpha-group-significance --i-alpha-diversity evenness_vector.qza --m-metadata-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/metadata3.tsv --o-visualization evenness-significance.qzv`  
+
+`qiime diversity alpha-group-significance --i-alpha-diversity shannon_vector.qza --m-metadata-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/metadata3.tsv --o-visualization shannon-significance.qzv`  
+
+`qiime diversity alpha-group-significance --i-alpha-diversity observed_features_vector.qza --m-metadata-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/metadata3.tsv --o-visualization observed-features-significance.qzv`  
 
 - Para poder analizar estadísticamente los resultados de alpha diversidad se deben exportar los resultados:  
 
-`qiime metadata tabulate --m-input-file metadata_complete3_NUM.txt --m-input-file core-metrics-results_NUM/faith_pd_vector.qza --m-input-file core-metrics-results_NUM/shannon_vector.qza --m-input-file core-metrics-results_NUM/evenness_vector.qza --m-input-file core-metrics-results_NUM/observed_features_vector.qza --o-visualization core-metrics-results_NUM/combined_metadata_NUM.qzv`  
+`qiime metadata tabulate --m-input-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/metadata3.tsv --m-input-file faith_pd_vector.qza --m-input-file shannon_vector.qza --m-input-file evenness_vector.qza --m-input-file observed_features_vector.qza --o-visualization combined_metadata.qzv`  
 
 
 
