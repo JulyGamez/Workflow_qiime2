@@ -127,5 +127,13 @@ Se realiará un filtrado manual por ID, basándonos en lo que aparece en el cont
 
 `qiime metadata tabulate --m-input-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/metadata3.tsv --m-input-file faith_pd_vector.qza --m-input-file shannon_vector.qza --m-input-file evenness_vector.qza --m-input-file observed_features_vector.qza --o-visualization combined_metadata.qzv`  
 
+- Para estadísticos de la diversidad beta:  
+
+`qiime diversity beta-group-significance --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza --m-metadata-file metadata3.tsv --m-metadata-column Group --p-method permanova --p-pairwise --o-visualization core-metrics-results/weighted_unifrac_Group_perm.qzv`  
+
+`qiime diversity beta-group-significance --i-distance-matrix core-metrics-results/unweighted_unifrac_distance_matrix.qza --m-metadata-file metadata3.tsv --m-metadata-column Group --p-method permanova --p-pairwise --o-visualization core-metrics-results/unweighted_unifrac_Group_perm.qzv`  
+
+
+
 
 
