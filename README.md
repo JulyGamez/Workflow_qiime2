@@ -137,6 +137,23 @@ Se realiará un filtrado manual por ID, basándonos en lo que aparece en el cont
  
 `qiime diversity beta-group-significance --i-distance-matrix core-metrics-results/weighted_unifrac_distance_matrix.qza --m-metadata-file metadata3.tsv --m-metadata-column Group --p-method anosim --p-pairwise --o-visualization core-metrics-results/weighted_unifrac_Group_anosim.qzv`  
   
+- Para realizar BIPLOTS de beta diversidad [TUTORIAL BIPLOT](https://forum.qiime2.org/t/how-to-use-pcoa-biplot/7953/2)
+- En core-metrics-results tenemos algunos archivos necesarios: x_distance_matrix y rarefied_table.  
+
+`qiime diversity pcoa --i-distance-matrix weighted_unifrac_distance_matrix.qza --o-pcoa weighted_pcoa_matrix.qza`  
+
+- Necesario obtener una tabla de frecuencia relativa a partir de rarefied_table.qza  
+
+`qiime feature-table relative-frequency --i-table rarefied_table.qza --o-relative-frequency-table rarefied_relative_table.qza`  
+
+- Se genera el pcoa-biplot con el pcoa y la rarefied_relative_table
+
+`qiime diversity pcoa-biplot --i-pcoa weighted_pcoa_matrix.qza --i-features rarefied_relative_table.qza --o-biplot weighted_biplot_matrix.qza`  
+
+- Se genera la visualización del biplot con emperor. Se deben colocar la cantidad de features que deseamos aparezcan (aparecen solo IDs, en caso de querer nombres, es necesario realizar un taxa collapse al nivel taxonomico deseado a partir de la frequency table inicial (feature_table5))
+
+`qiime emperor biplot --i-biplot weighted_biplot_matrix.qza --m-sample-metadata-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/metadata3.tsv --m-feature-metadata-file /mnt/Documents/A00826712/16S_CITOCINAS/first_analysis/02_dada12_16_285/taxonomy_silva_clas.qza --p-number-of-features 8 --o-visualization weighted_emperor_biplot.qzv`  
+
 
 
 
